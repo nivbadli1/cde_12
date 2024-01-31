@@ -1,0 +1,42 @@
+name: Data Engineering Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Extract data
+      run: |
+        wget -O data.csv https://example.com/data_source
+        echo "Data extraction complete"
+
+    - name: Transform data
+      run: |
+        python transform.py data.csv transformed_data.csv
+        echo "Data transformation complete"
+
+    - name: Load data
+      run: |
+        cp transformed_data.csv /path/to/destination
+        echo "Data loading complete"
+
+    - name: Clean up
+      run: |
+        rm data.csv transformed_data.csv
+        echo "Cleanup complete"
